@@ -33,7 +33,7 @@ function Signin() {
 
     if (response.ok) {
       // ✅ Store auth data
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("access", data.token);
       localStorage.setItem("user_id", data.user_id);
       localStorage.setItem("username", data.username);
       localStorage.setItem("is_admin", data.is_admin); // ✅ store admin flag

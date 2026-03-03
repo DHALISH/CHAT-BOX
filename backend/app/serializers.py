@@ -22,3 +22,11 @@ class SignupSerializer(serializers.ModelSerializer):
 
         return user
 
+from rest_framework import serializers
+from .models import FriendRequest
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendRequest
+        fields = ["id", "sender", "receiver", "status", "created_at"]
+        read_only_fields = ["id", "sender", "created_at"]

@@ -1,0 +1,152 @@
+/* Full Page (Same as Home Gradient Style) */
+.search-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Glass Card */
+.search-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* Header */
+.search-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.search-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Search Box */
+.search-box {
+  margin-bottom: 15px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Search Results */
+.search-results {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* User Item */
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: 0.2s ease;
+}
+
+.user-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Left Section */
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #764ba2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* User Info */
+.user-info h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.user-info p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Friend Button */
+.friend-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  background-color: white;
+  color: #764ba2;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.friend-btn:hover {
+  background-color: #f1f1f1;
+}
+
+.friend-btn:disabled {
+  background-color: #ccc;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* No Results */
+.no-result {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* Loading & Error */
+.loading {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 14px;
+  color: #ffcccc;
+  margin-bottom: 10px;
+}
