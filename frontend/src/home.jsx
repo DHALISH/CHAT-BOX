@@ -10,14 +10,16 @@ const dummyUsers = [
 
 const ChatList = () => {
   const [search, setSearch] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
 
   const filteredUsers = dummyUsers.filter((user) =>
     user.username.toLowerCase().includes(search.toLowerCase())
   );
+
   const goToSearch = () => {
     navigate("/search");
-  }
+  };
 
   return (
     <div className="chat-container">
@@ -26,10 +28,36 @@ const ChatList = () => {
       <header className="chat-header">
         <div className="header-top">
           <h1 className="chat-title">ChatBox</h1>
-          <button className="options-btn">⋮</button>
+
+          <div className="header-icons">
+
+            {/* Notification Icon */}
+            <div className="notification-icon">
+              🔔
+              <span className="notification-badge">0</span>
+            </div>
+
+            {/* Options Button */}
+            <div className="options-wrapper">
+              <button
+                className="options-btn"
+                onClick={() => setShowMenu(!showMenu)}
+              >
+                ⋮
+              </button>
+
+              {showMenu && (
+                <div className="dropdown-menu">
+                  <div className="dropdown-item">👤 Profile</div>
+                  <div className="dropdown-item">📇 Contact</div>
+                </div>
+              )}
+            </div>
+
+          </div>
         </div>
 
-        {/* Search Input */}
+        {/* Search */}
         <div className="chat-search">
           <input
             type="text"
@@ -59,8 +87,7 @@ const ChatList = () => {
         )}
       </div>
 
-      {/* Floating Button */}
-      <button className="chat-fab" onClick={goToSearch}>＋</button>
+      <button className="chat-fab" onClick={goToSearch}>+</button>
 
     </div>
   );

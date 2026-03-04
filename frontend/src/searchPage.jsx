@@ -1,16 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SearchPage.css";
 
 function SearchPage() {
+  const navigate = useNavigate();
+  
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [friendRequests, setFriendRequests] = useState({}); // track request status by userId
+  const [friendRequests, setFriendRequests] = useState({}); 
 
-  const token = localStorage.getItem("token"); // ✅ consistent key
+  const token = localStorage.getItem("token");
 
-  // Search users
+  // 🔎 Search users
   const handleSearch = async (value) => {
     setSearch(value);
 
@@ -34,6 +37,16 @@ function SearchPage() {
 
       const data = await response.json();
       setUsers(data);
+
+      // ✅ preload request status from backend
+      const statusMap = {};
+      data.forEach((user) => {
+        if (user.request_status) {
+          statusMap[user.id] = user.request_status;
+        }
+      });
+      setFriendRequests(statusMap);
+
       setError("");
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -42,7 +55,7 @@ function SearchPage() {
     }
   };
 
-  // Send friend request
+  // ➕ Send friend request
   const handleRequest = async (id) => {
     try {
       const response = await fetch("http://127.0.0.1:8000/friend-request/", {
@@ -56,16 +69,13 @@ function SearchPage() {
 
       if (response.ok) {
         setFriendRequests({ ...friendRequests, [id]: "pending" });
-      } else {
-        const errorData = await response.json();
-        console.error("Friend request error:", errorData);
       }
     } catch (err) {
       console.error("Network error:", err);
     }
   };
 
-  // Cancel friend request
+  // ❌ Cancel friend request
   const handleCancel = async (requestId, userId) => {
     try {
       const response = await fetch(
@@ -86,7 +96,7 @@ function SearchPage() {
     }
   };
 
-  // Accept friend request
+  // ✅ Accept friend request
   const handleAccept = async (requestId, userId) => {
     try {
       const response = await fetch(
@@ -107,7 +117,7 @@ function SearchPage() {
     }
   };
 
-  // Reject friend request
+  // 🚫 Reject friend request
   const handleReject = async (requestId, userId) => {
     try {
       const response = await fetch(
@@ -128,7 +138,7 @@ function SearchPage() {
     }
   };
 
-  // Unfriend
+  // 👋 Unfriend
   const handleUnfriend = async (requestId, userId) => {
     try {
       const response = await fetch(
@@ -152,10 +162,19 @@ function SearchPage() {
   return (
     <div className="search-container">
       <div className="search-card">
+
+        {/* 🔝 Header with Left Corner Home Button */}
         <div className="search-header">
+          <button
+            className="home-btn-inside"
+            onClick={() => navigate("/home")}
+          >
+            🏠
+          </button>
           <h2>Search Users</h2>
         </div>
 
+        {/* 🔎 Search Input */}
         <div className="search-box">
           <input
             type="text"
@@ -165,6 +184,7 @@ function SearchPage() {
           />
         </div>
 
+
         {loading && <p className="loading">Searching...</p>}
         {error && <p className="error-message">{error}</p>}
 
@@ -172,6 +192,7 @@ function SearchPage() {
           {users.length > 0 ? (
             users.map((user) => {
               const status = friendRequests[user.id];
+
               return (
                 <div key={user.id} className="user-item">
                   <div className="left-section">
@@ -184,23 +205,32 @@ function SearchPage() {
                     </div>
                   </div>
 
-                  {/* Button logic based on request status */}
+                  {/* ✅ Button logic */}
                   {status === "pending" ? (
                     <button
                       className="friend-btn"
-                      onClick={() => handleCancel(user.requestId, user.id)}
+                      onClick={() =>
+                        handleCancel(user.request_id, user.id)
+                      }
                     >
                       Cancel Request
                     </button>
                   ) : status === "accepted" ? (
                     <button
                       className="friend-btn"
-                      onClick={() => handleUnfriend(user.requestId, user.id)}
+                      onClick={() =>
+                        handleUnfriend(user.request_id, user.id)
+                      }
                     >
                       Unfriend
                     </button>
                   ) : status === "rejected" ? (
-                    <p className="status-text">Request Rejected ❌</p>
+                    <button
+                      className="friend-btn"
+                      onClick={() => handleRequest(user.id)}
+                    >
+                      Add Again
+                    </button>
                   ) : (
                     <button
                       className="friend-btn"

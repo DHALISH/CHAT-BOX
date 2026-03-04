@@ -6,7 +6,7 @@
   font-family: "Segoe UI", sans-serif;
 }
 
-/* App Background */
+/* Background */
 body {
   background: linear-gradient(135deg, #0f172a, #1e293b);
 }
@@ -19,7 +19,7 @@ body {
   max-width: 420px;
   margin: 0 auto;
   backdrop-filter: blur(20px);
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.9);
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   color: white;
@@ -30,7 +30,7 @@ body {
 .chat-header {
   padding: 20px 16px;
   backdrop-filter: blur(20px);
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(30, 41, 59, 0.8);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -48,6 +48,39 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* Header Icons Container */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+/* Notification Icon */
+.notification-icon {
+  position: relative;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.notification-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 50px;
+  font-weight: bold;
+}
+
 /* Options Button */
 .options-btn {
   background: rgba(255, 255, 255, 0.05);
@@ -62,6 +95,50 @@ body {
 
 .options-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown Wrapper */
+.options-wrapper {
+  position: relative;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 170px;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+  z-index: 100;
+}
+
+/* Dropdown Items */
+.dropdown-item {
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Dropdown Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Search Bar */
@@ -125,12 +202,12 @@ body {
   position: relative;
 }
 
-/* Online Dot */
+/* Online Indicator */
 .avatar::after {
   content: "";
   position: absolute;
-  bottom: 2px;
-  right: 2px;
+  bottom: 3px;
+  right: 3px;
   width: 10px;
   height: 10px;
   background: #22c55e;
@@ -160,7 +237,7 @@ body {
   font-size: 14px;
 }
 
-/* Floating Button */
+/* Floating Action Button */
 .chat-fab {
   position: absolute;
   bottom: 25px;
@@ -173,7 +250,7 @@ body {
   color: white;
   font-size: 28px;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
   transition: 0.3s ease;
 }
 
