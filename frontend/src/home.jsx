@@ -1,24 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
-
-const dummyUsers = [
-  { id: 1, username: "john_doe", status: "Online" },
-  { id: 2, username: "emma_watson", status: "Offline" },
-  { id: 3, username: "alex_raj", status: "Online" },
-];
 
 const ChatList = () => {
   const [search, setSearch] = useState("");
   const [showMenu, setShowMenu] = useState(false);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  const filteredUsers = dummyUsers.filter((user) =>
+  useEffect(() => {
+    fetchFriends();
+  }, []);
+
+  const fetchFriends = async () => {
+    try {
+      const token = localStorage.getItem("access");
+
+      const response = await fetch("http://127.0.0.1:8000/home-friends/", {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+    }
+  };
+
+  const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const goToSearch = () => {
     navigate("/search");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+
+    navigate("/");
   };
 
   return (
@@ -31,13 +57,13 @@ const ChatList = () => {
 
           <div className="header-icons">
 
-            {/* Notification Icon */}
-            <div className="notification-icon">
+            {/* Notification */}
+            <div className="notification-icon" onClick={() => navigate("/notification")}>
               🔔
               <span className="notification-badge">0</span>
             </div>
 
-            {/* Options Button */}
+            {/* Options */}
             <div className="options-wrapper">
               <button
                 className="options-btn"
@@ -50,6 +76,9 @@ const ChatList = () => {
                 <div className="dropdown-menu">
                   <div className="dropdown-item">👤 Profile</div>
                   <div className="dropdown-item">📇 Contact</div>
+                  <div className="dropdown-item" onClick={handleLogout}>
+                    🚪 Logout
+                  </div>
                 </div>
               )}
             </div>
@@ -61,7 +90,7 @@ const ChatList = () => {
         <div className="chat-search">
           <input
             type="text"
-            placeholder="Search users..."
+            placeholder="Search friends..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -76,14 +105,15 @@ const ChatList = () => {
               <div className="avatar">
                 {user.username.charAt(0).toUpperCase()}
               </div>
+
               <div className="chat-info">
                 <h4>{user.username}</h4>
-                <p>{user.status}</p>
+                <p>Friend</p>
               </div>
             </div>
           ))
         ) : (
-          <p className="no-result">No users found</p>
+          <p className="no-result">No friends yet</p>
         )}
       </div>
 

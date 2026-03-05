@@ -4,6 +4,7 @@ import Signup from "./Signup.jsx";
 import Index from "./start.jsx";
 import Home from "./home.jsx";
 import SearchPage from "./searchPage.jsx";
+import NotificationPage from "./notificationpage.jsx";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/notification" element={<NotificationPage />} />
 
       </Routes>
     </BrowserRouter>

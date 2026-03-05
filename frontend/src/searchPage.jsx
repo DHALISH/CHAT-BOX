@@ -11,7 +11,7 @@ function SearchPage() {
   const [error, setError] = useState("");
   const [friendRequests, setFriendRequests] = useState({}); 
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access");
 
   // 🔎 Search users
   const handleSearch = async (value) => {
@@ -76,7 +76,7 @@ function SearchPage() {
   };
 
   // ❌ Cancel friend request
-  const handleCancel = async (requestId, userId) => {
+    const handleCancel = async (requestId, userId) => {
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/friend-request/${requestId}/cancel/`,
@@ -89,7 +89,10 @@ function SearchPage() {
       );
 
       if (response.ok) {
-        setFriendRequests({ ...friendRequests, [userId]: null });
+        setFriendRequests((prev) => ({
+          ...prev,
+          [userId]: null,
+        }));
       }
     } catch (err) {
       console.error("Cancel error:", err);
@@ -158,6 +161,8 @@ function SearchPage() {
       console.error("Unfriend error:", err);
     }
   };
+  
+  
 
   return (
     <div className="search-container">
@@ -209,8 +214,7 @@ function SearchPage() {
                   {status === "pending" ? (
                     <button
                       className="friend-btn"
-                      onClick={() =>
-                        handleCancel(user.request_id, user.id)
+                      onClick={() => handleCancel(user.request_id, user.id)
                       }
                     >
                       Cancel Request

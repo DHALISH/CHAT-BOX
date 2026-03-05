@@ -1,0 +1,145 @@
+/* Page Background */
+.notification-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Card */
+.notification-card {
+  width: 420px;
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  color: white;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.top-bar h2 {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+/* Home Button */
+.home-btn {
+  background: #334155;
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.home-btn:hover {
+  background: #475569;
+}
+
+/* Section Titles */
+.section-title {
+  margin-top: 18px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #94a3b8;
+}
+
+/* Request Item */
+.request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f172a;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: 0.2s;
+}
+
+.request-item:hover {
+  background: #020617;
+}
+
+/* Username */
+.request-item span {
+  font-size: 15px;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+/* Accept Button */
+.accept {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-right: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.accept:hover {
+  background: #16a34a;
+}
+
+/* Reject Button */
+.reject {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reject:hover {
+  background: #dc2626;
+}
+
+/* Cancel Button */
+.cancel {
+  background: #64748b;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel:hover {
+  background: #475569;
+}
+
+/* Pending Badge */
+.pending {
+  background: #f59e0b;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Empty / Loading */
+.empty {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}

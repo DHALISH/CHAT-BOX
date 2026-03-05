@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from app.views import SignupView, LoginView, search_user, send_friend_request, accept_friend_request, reject_friend_request, cancel_friend_request, unfriend
+from app.views import SignupView, LoginView, get_friend_requests, home_friends, search_user, send_friend_request, accept_friend_request, reject_friend_request, cancel_friend_request, unfriend
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,5 +12,7 @@ urlpatterns = [
     path("friend-request/<int:request_id>/reject/", reject_friend_request, name="reject_friend_request"),
     path("friend-request/<int:request_id>/cancel/", cancel_friend_request, name="cancel_friend_request"),
     path("friend/<int:request_id>/unfriend/", unfriend, name="unfriend"),
+    path("friend-requests/", get_friend_requests, name="get_friend_requests"),
+    path("home-friends/", home_friends),
 
 ]
