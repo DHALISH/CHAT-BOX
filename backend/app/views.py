@@ -1,8 +1,11 @@
 # Create your views here.
+from email.message import Message
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
-from rest_framework.generics import CreateAPIView
+from django.http import JsonResponse
+from rest_framework.generics import CreateAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -12,7 +15,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 
 from .models import FriendRequest
-from .serializers import SignupSerializer, FriendRequestSerializer
+from .serializers import MessageSerializer, SignupSerializer, FriendRequestSerializer
 
 
 # ===========================
@@ -334,3 +337,78 @@ def home_friends(request):
         })
 
     return Response(friend_list)
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.contrib.auth.models import User
+from .models import Message
+from .serializers import MessageSerializer
+
+
+# GET CHAT MESSAGES
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_messages(request, user_id):
+
+    messages = Message.objects.filter(
+        sender__in=[request.user.id, user_id],
+        receiver__in=[request.user.id, user_id]
+    ).order_by("timestamp")
+
+    # mark received messages as seen
+    Message.objects.filter(
+        sender_id=user_id,
+        receiver=request.user,
+        seen=False
+    ).update(seen=True)
+
+    serializer = MessageSerializer(messages, many=True)
+
+    return Response(serializer.data)
+
+
+# SEND MESSAGE
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def send_message(request):
+
+    receiver_id = request.data.get("receiver")
+    text = request.data.get("text")
+
+    if not receiver_id or not text:
+        return Response({"error": "receiver and text required"}, status=400)
+
+    try:
+        receiver = User.objects.get(id=receiver_id)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=404)
+
+    message = Message.objects.create(
+        sender=request.user,
+        receiver=receiver,
+        text=text
+    )
+
+    serializer = MessageSerializer(message)
+
+    return Response(serializer.data)
+
+def user_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    return JsonResponse({
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+    })
+    
+from rest_framework import generics, permissions
+from .serializers import UserSerializer
+
+class CurrentUserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        # Always return the currently authenticated user
+        return self.request.user

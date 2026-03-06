@@ -1,6 +1,7 @@
+from django import views
 from django.contrib import admin
 from django.urls import path
-from app.views import SignupView, LoginView, get_friend_requests, home_friends, search_user, send_friend_request, accept_friend_request, reject_friend_request, cancel_friend_request, unfriend
+from app.views import CurrentUserProfileView, SignupView, LoginView,  get_friend_requests, get_messages, home_friends, search_user, send_friend_request, accept_friend_request, reject_friend_request, cancel_friend_request, send_message, unfriend, user_detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,5 +15,14 @@ urlpatterns = [
     path("friend/<int:request_id>/unfriend/", unfriend, name="unfriend"),
     path("friend-requests/", get_friend_requests, name="get_friend_requests"),
     path("home-friends/", home_friends),
-
+    path("messages/<int:user_id>/", get_messages, name="get_messages"),
+    path("send-message/", send_message, name="send_message"),  
+    path("user/<int:pk>/", user_detail, name="user-detail"),
+    path("api/profile/", CurrentUserProfileView.as_view(), name="current-user-profile"),
 ]
+    
+    
+    
+    
+
+

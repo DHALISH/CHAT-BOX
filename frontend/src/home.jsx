@@ -57,6 +57,16 @@ const ChatList = () => {
 
           <div className="header-icons">
 
+            {/* Search */}
+        <div className="chat-search">
+          <input
+            type="text"
+            placeholder="Search friends..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
             {/* Notification */}
             <div className="notification-icon" onClick={() => navigate("/notification")}>
               🔔
@@ -74,7 +84,9 @@ const ChatList = () => {
 
               {showMenu && (
                 <div className="dropdown-menu">
-                  <div className="dropdown-item">👤 Profile</div>
+                  <div className="dropdown-item" onClick={() => navigate("/profile")}>
+                    👤 Profile
+                  </div>
                   <div className="dropdown-item">📇 Contact</div>
                   <div className="dropdown-item" onClick={handleLogout}>
                     🚪 Logout
@@ -86,22 +98,14 @@ const ChatList = () => {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="chat-search">
-          <input
-            type="text"
-            placeholder="Search friends..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        
       </header>
 
       {/* Chat List */}
       <div className="chat-body">
         {filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
-            <div key={user.id} className="chat-item">
+            <div key={user.id} className="chat-item" onClick={() => navigate(`/chat/${user.id}`)}>
               <div className="avatar">
                 {user.username.charAt(0).toUpperCase()}
               </div>

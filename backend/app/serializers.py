@@ -74,3 +74,25 @@ class UserSearchSerializer(serializers.ModelSerializer):
     def get_request_sender_id(self, obj):
         request = self.get_friend_request(obj)
         return request.sender.id if request else None
+
+from rest_framework import serializers
+from .models import Message
+
+class MessageSerializer(serializers.ModelSerializer):
+
+    sender_username = serializers.CharField(
+        source="sender.username",
+        read_only=True
+    )
+
+    class Meta:
+        model = Message
+        fields = "__all__"
+
+from rest_framework import serializers
+from django.contrib.auth.models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "first_name", "last_name", "date_joined"]

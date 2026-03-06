@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "./NotificationPage.css";
 
 function NotificationPage() {
-
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const token = localStorage.getItem("access");
 
   useEffect(() => {
-
     fetch("http://127.0.0.1:8000/friend-requests/", {
       method: "GET",
       headers: {
@@ -19,7 +17,6 @@ function NotificationPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-
         const received = data.received.map((r) => ({
           id: r.id,
           username: r.sender_username,
@@ -41,68 +38,57 @@ function NotificationPage() {
         setNotifications(all);
       })
       .catch((err) => console.log(err));
-
   }, []);
 
   const acceptRequest = (id) => {
-
     fetch(`http://127.0.0.1:8000/friend-request/${id}/accept/`, {
       method: "POST",
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+      headers: { Authorization: `Token ${token}` },
     }).then(() => {
       setNotifications(notifications.filter((n) => n.id !== id));
     });
-
   };
 
   const rejectRequest = (id) => {
-
     fetch(`http://127.0.0.1:8000/friend-request/${id}/reject/`, {
       method: "POST",
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+      headers: { Authorization: `Token ${token}` },
     }).then(() => {
       setNotifications(notifications.filter((n) => n.id !== id));
     });
-
   };
 
   const cancelRequest = (id) => {
-
     fetch(`http://127.0.0.1:8000/friend-request/${id}/cancel/`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Token ${token}`,
-      },
+      headers: { Authorization: `Token ${token}` },
     }).then(() => {
       setNotifications(notifications.filter((n) => n.id !== id));
     });
-
   };
 
   return (
     <div className="notification-container">
-
       <div className="notification-card">
+        {/* Header */}
+        <header className="notification-header">
+          <h1 className="notification-title">Notifications</h1>
+        </header>
 
-        <div className="top-bar">
-          <button className="home-btn" onClick={() => navigate("/home")}>
-            🏠
-          </button>
-          <h2>Notifications</h2>
-        </div>
+        {/* Navigation Bar */}
+        <nav className="notification-nav">
+          <button onClick={() => navigate("/home")}>🏠 Home</button>
+          <button onClick={() => navigate("/profile")}>👤 Profile</button>
+          <button onClick={() => navigate("/chat")}>💬 Chats</button>
+        </nav>
 
+        {/* Notifications */}
         {notifications.length === 0 ? (
           <p className="empty">No notifications</p>
         ) : (
           notifications.map((n) => (
             <div key={n.id} className="request-item">
-
               <div className="text">
-
                 {n.type === "received" ? (
                   <span>
                     <b>{n.username}</b> sent you a friend request
@@ -112,11 +98,9 @@ function NotificationPage() {
                     You sent a friend request to <b>{n.username}</b>
                   </span>
                 )}
-
               </div>
 
               <div className="actions">
-
                 {n.type === "received" ? (
                   <>
                     <button
@@ -125,7 +109,6 @@ function NotificationPage() {
                     >
                       Accept
                     </button>
-
                     <button
                       className="reject"
                       onClick={() => rejectRequest(n.id)}
@@ -136,7 +119,6 @@ function NotificationPage() {
                 ) : (
                   <>
                     <span className="pending">Pending</span>
-
                     <button
                       className="cancel"
                       onClick={() => cancelRequest(n.id)}
@@ -145,15 +127,11 @@ function NotificationPage() {
                     </button>
                   </>
                 )}
-
               </div>
-
             </div>
           ))
         )}
-
       </div>
-
     </div>
   );
 }

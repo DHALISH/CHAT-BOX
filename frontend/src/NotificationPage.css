@@ -1,132 +1,108 @@
-/* Page Background */
+/* Background (same as profile) */
 .notification-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  background: #0f172a; /* solid dark background */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
-/* Card */
+/* Card (same as profile card) */
 .notification-card {
-  width: 420px;
-  background: #1e293b;
-  border-radius: 14px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  color: white;
+  width: 400px;
+  background: #1e293b; /* same card color */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  color: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 
-/* Top Bar */
-.top-bar {
+/* Header */
+.notification-header {
+  margin-bottom: 15px;
+}
+
+.notification-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+/* Navigation Bar (make it match profile style) */
+.notification-nav {
   display: flex;
-  align-items: center;
+  justify-content: space-around;
   margin-bottom: 20px;
 }
 
-.top-bar h2 {
-  font-size: 20px;
-  margin-left: 10px;
-}
-
-/* Home Button */
-.home-btn {
-  background: #334155;
+.notification-nav button {
+  background: transparent;
   border: none;
-  color: white;
-  font-size: 18px;
-  padding: 7px 10px;
-  border-radius: 8px;
+  color: #f1f5f9;
+  font-size: 14px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: color 0.2s ease;
 }
 
-.home-btn:hover {
-  background: #475569;
-}
-
-/* Section Titles */
-.section-title {
-  margin-top: 18px;
-  margin-bottom: 10px;
-  font-size: 15px;
-  color: #94a3b8;
+.notification-nav button:hover {
+  color: #25d366;
 }
 
 /* Request Item */
 .request-item {
+  background: #0f172a;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0f172a;
-  padding: 12px 14px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  transition: 0.2s;
 }
 
-.request-item:hover {
-  background: #020617;
-}
-
-/* Username */
 .request-item span {
-  font-size: 15px;
+  font-size: 14px;
+  color: #e2e8f0;
 }
 
-/* Action Buttons */
+/* Actions */
 .actions {
   display: flex;
   align-items: center;
 }
 
-/* Accept Button */
+/* Buttons */
+.accept, .reject, .cancel {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s ease;
+}
+
 .accept {
   background: #22c55e;
   color: white;
-  border: none;
-  padding: 6px 10px;
   margin-right: 6px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
 }
+.accept:hover { background: #16a34a; }
 
-.accept:hover {
-  background: #16a34a;
-}
-
-/* Reject Button */
 .reject {
   background: #ef4444;
   color: white;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
 }
+.reject:hover { background: #dc2626; }
 
-.reject:hover {
-  background: #dc2626;
-}
-
-/* Cancel Button */
 .cancel {
   background: #64748b;
   color: white;
-  border: none;
-  padding: 6px 10px;
   margin-left: 6px;
-  border-radius: 6px;
-  cursor: pointer;
 }
-
-.cancel:hover {
-  background: #475569;
-}
+.cancel:hover { background: #475569; }
 
 /* Pending Badge */
 .pending {
@@ -137,9 +113,9 @@
   font-size: 12px;
 }
 
-/* Empty / Loading */
+/* Empty State */
 .empty {
-  text-align: center;
   color: #94a3b8;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  font-size: 14px;
 }

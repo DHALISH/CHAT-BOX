@@ -5,6 +5,8 @@ import Index from "./start.jsx";
 import Home from "./home.jsx";
 import SearchPage from "./searchPage.jsx";
 import NotificationPage from "./notificationpage.jsx";
+import ChatPage from "./chatpage.jsx";
+import ProfilePage from "./profilepage.jsx";
 
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/chat/:id" element={<ChatPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
 
       </Routes>
     </BrowserRouter>
