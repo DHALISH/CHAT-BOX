@@ -1,26 +1,36 @@
-# Create your views here.
-from email.message import Message
-
+# ===========================
+# IMPORTS
+# ===========================
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-
 from django.http import JsonResponse
-from rest_framework.generics import CreateAPIView, get_object_or_404
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+
+from rest_framework import status, generics, permissions
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status
+from rest_framework.authtoken.models import Token
 
-from .models import FriendRequest
-from .serializers import MessageSerializer, SignupSerializer, FriendRequestSerializer
+from .models import FriendRequest, Message
+from .serializers import (
+    MessageSerializer,
+    SignupSerializer,
+    FriendRequestSerializer,
+    UserSearchSerializer,
+    UserSerializer
+)
 
 
 # ===========================
+# AUTHENTICATION
+# ===========================
+
 # SIGNUP
-# ===========================
 class SignupView(CreateAPIView):
     serializer_class = SignupSerializer
     permission_classes = [AllowAny]
@@ -41,9 +51,7 @@ class SignupView(CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-# ===========================
 # LOGIN
-# ===========================
 class LoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -67,22 +75,17 @@ class LoginView(APIView):
             "user_id": user.id,
             "username": user.username,
             "last_login": user.last_login,
-        }, status=status.HTTP_200_OK)
+        })
 
 
 # ===========================
-# SEARCH USER
+# USER SEARCH
 # ===========================
-from django.contrib.auth.models import User
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from .serializers import UserSearchSerializer
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def search_user(request):
+
     username = request.GET.get("username", "").strip()
 
     if not username:
@@ -99,33 +102,27 @@ def search_user(request):
     )
 
     return Response(serializer.data)
-    
-
 
 
 # ===========================
-# SEND FRIEND REQUEST
+# FRIEND REQUEST SYSTEM
 # ===========================
+
+# SEND REQUEST
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def send_friend_request(request):
+
     receiver_id = request.data.get("receiver_id")
 
     try:
         receiver = User.objects.get(id=receiver_id)
     except User.DoesNotExist:
-        return Response(
-            {"error": "User not found"},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        return Response({"error": "User not found"}, status=404)
 
     if receiver == request.user:
-        return Response(
-            {"error": "You cannot send a request to yourself"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"error": "Cannot send request to yourself"}, status=400)
 
-    # Prevent duplicate (both directions)
     if FriendRequest.objects.filter(
         sender=request.user,
         receiver=receiver,
@@ -135,12 +132,8 @@ def send_friend_request(request):
         receiver=request.user,
         status="pending"
     ).exists():
-        return Response(
-            {"error": "Friend request already exists"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"error": "Friend request already exists"}, status=400)
 
-    # Prevent if already friends
     if FriendRequest.objects.filter(
         sender=request.user,
         receiver=receiver,
@@ -150,10 +143,7 @@ def send_friend_request(request):
         receiver=request.user,
         status="accepted"
     ).exists():
-        return Response(
-            {"error": "You are already friends"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"error": "Already friends"}, status=400)
 
     friend_request = FriendRequest.objects.create(
         sender=request.user,
@@ -161,15 +151,14 @@ def send_friend_request(request):
     )
 
     serializer = FriendRequestSerializer(friend_request)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=201)
 
 
-# ===========================
-# ACCEPT FRIEND REQUEST
-# ===========================
+# ACCEPT REQUEST
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def accept_friend_request(request, request_id):
+
     try:
         friend_request = FriendRequest.objects.get(
             id=request_id,
@@ -177,26 +166,19 @@ def accept_friend_request(request, request_id):
             status="pending"
         )
     except FriendRequest.DoesNotExist:
-        return Response(
-            {"error": "Request not found"},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        return Response({"error": "Request not found"}, status=404)
 
     friend_request.status = "accepted"
     friend_request.save()
 
-    return Response(
-        {"message": "Friend request accepted"},
-        status=status.HTTP_200_OK
-    )
+    return Response({"message": "Friend request accepted"})
 
 
-# ===========================
-# REJECT FRIEND REQUEST
-# ===========================
+# REJECT REQUEST
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def reject_friend_request(request, request_id):
+
     try:
         friend_request = FriendRequest.objects.get(
             id=request_id,
@@ -204,23 +186,15 @@ def reject_friend_request(request, request_id):
             status="pending"
         )
     except FriendRequest.DoesNotExist:
-        return Response(
-            {"error": "Request not found"},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        return Response({"error": "Request not found"}, status=404)
 
     friend_request.status = "rejected"
     friend_request.save()
 
-    return Response(
-        {"message": "Friend request rejected"},
-        status=status.HTTP_200_OK
-    )
+    return Response({"message": "Friend request rejected"})
 
 
-# ===========================
-# CANCEL FRIEND REQUEST
-# ===========================
+# CANCEL REQUEST
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def cancel_friend_request(request, request_id):
@@ -228,96 +202,80 @@ def cancel_friend_request(request, request_id):
     try:
         friend_request = FriendRequest.objects.get(id=request_id)
     except FriendRequest.DoesNotExist:
-        return Response({"error": "Request ID not found"}, status=404)
+        return Response({"error": "Request not found"}, status=404)
 
     if friend_request.sender != request.user:
-        return Response({"error": "You cannot cancel this request"}, status=403)
+        return Response({"error": "Not allowed"}, status=403)
 
     if friend_request.status != "pending":
-        return Response({"error": "Request already accepted/rejected"}, status=400)
+        return Response({"error": "Request already processed"}, status=400)
 
     friend_request.delete()
-
     return Response({"message": "Friend request canceled"})
 
 
-# ===========================
 # UNFRIEND
-# ===========================
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def unfriend(request, request_id):
+
     try:
         friend_request = FriendRequest.objects.get(
             id=request_id,
             status="accepted"
         )
     except FriendRequest.DoesNotExist:
-        return Response(
-            {"error": "Friendship not found"},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        return Response({"error": "Friendship not found"}, status=404)
 
-    if friend_request.sender == request.user or friend_request.receiver == request.user:
+    if request.user in [friend_request.sender, friend_request.receiver]:
         friend_request.delete()
-        return Response(
-            {"message": "Unfriended successfully"},
-            status=status.HTTP_200_OK
-        )
+        return Response({"message": "Unfriended successfully"})
 
-    return Response(
-        {"error": "Not authorized"},
-        status=status.HTTP_403_FORBIDDEN
-    )
+    return Response({"error": "Not authorized"}, status=403)
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from .models import FriendRequest
 
+# ===========================
+# FRIEND LIST + REQUESTS
+# ===========================
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_friend_requests(request):
 
-    received = FriendRequest.objects.filter(receiver=request.user, status="pending")
-    sent = FriendRequest.objects.filter(sender=request.user, status="pending")
+    received = FriendRequest.objects.filter(
+        receiver=request.user,
+        status="pending"
+    )
 
-    received_data = [
-        {
-            "id": r.id,
-            "sender_username": r.sender.username,
-            "created_at": r.created_at
-        }
-        for r in received
-    ]
+    sent = FriendRequest.objects.filter(
+        sender=request.user,
+        status="pending"
+    )
 
-    sent_data = [
-        {
-            "id": r.id,
-            "receiver_username": r.receiver.username,
-            "created_at": r.created_at
-        }
-        for r in sent
-    ]
+    received_data = [{
+        "id": r.id,
+        "sender_username": r.sender.username,
+        "created_at": r.created_at
+    } for r in received]
+
+    sent_data = [{
+        "id": r.id,
+        "receiver_username": r.receiver.username,
+        "created_at": r.created_at
+    } for r in sent]
 
     return Response({
         "received": received_data,
         "sent": sent_data
     })
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from django.db.models import Q
-from .models import FriendRequest
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def home_friends(request):
+
     user = request.user
 
-    # Get accepted friend requests
     friends = FriendRequest.objects.filter(
         Q(sender=user) | Q(receiver=user),
         status="accepted"
@@ -326,10 +284,7 @@ def home_friends(request):
     friend_list = []
 
     for friend in friends:
-        if friend.sender == user:
-            friend_user = friend.receiver
-        else:
-            friend_user = friend.sender
+        friend_user = friend.receiver if friend.sender == user else friend.sender
 
         friend_list.append({
             "id": friend_user.id,
@@ -338,33 +293,30 @@ def home_friends(request):
 
     return Response(friend_list)
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from django.contrib.auth.models import User
-from .models import Message
-from .serializers import MessageSerializer
 
+# ===========================
+# CHAT SYSTEM
+# ===========================
 
-# GET CHAT MESSAGES
+# GET MESSAGES
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_messages(request, user_id):
 
-    messages = Message.objects.filter(
-        sender__in=[request.user.id, user_id],
-        receiver__in=[request.user.id, user_id]
-    ).order_by("timestamp")
+    current_user = request.user
 
-    # mark received messages as seen
     Message.objects.filter(
         sender_id=user_id,
-        receiver=request.user,
+        receiver=current_user,
         seen=False
     ).update(seen=True)
 
-    serializer = MessageSerializer(messages, many=True)
+    messages = Message.objects.filter(
+        Q(sender=current_user, receiver_id=user_id) |
+        Q(sender_id=user_id, receiver=current_user)
+    ).order_by("timestamp")
 
+    serializer = MessageSerializer(messages, many=True)
     return Response(serializer.data)
 
 
@@ -391,24 +343,28 @@ def send_message(request):
     )
 
     serializer = MessageSerializer(message)
-
     return Response(serializer.data)
 
+
+# ===========================
+# USER PROFILE
+# ===========================
+
 def user_detail(request, pk):
+
     user = get_object_or_404(User, pk=pk)
+
     return JsonResponse({
         "id": user.id,
         "username": user.username,
         "email": user.email,
     })
-    
-from rest_framework import generics, permissions
-from .serializers import UserSerializer
+
 
 class CurrentUserProfileView(generics.RetrieveAPIView):
+
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        # Always return the currently authenticated user
         return self.request.user

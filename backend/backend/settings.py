@@ -44,8 +44,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
+    "channels",
+    
 ]
-
+ASGI_APPLICATION = "backend.asgi.application"
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # ✅ Add CORS middleware at the top
     'django.middleware.security.SecurityMiddleware',
@@ -73,6 +75,11 @@ TEMPLATES = [
         },
     },
 ]
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 

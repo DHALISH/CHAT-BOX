@@ -100,19 +100,21 @@ word-wrap:break-word;
 
 .sent{
 background:#dcf8c6;
+color:black;
 }
 
 /* RECEIVED MESSAGE */
 
 .received{
 background:white;
+color: black;
 }
 
 /* SEEN STATUS */
 
 .seen-status{
 font-size:11px;
-color:gray;
+color:black;
 margin-top:5px;
 text-align:right;
 }
