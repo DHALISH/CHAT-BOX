@@ -35,27 +35,27 @@ urlpatterns = [
     # ======================
     # USER
     # ======================
-    path("api/user/<int:pk>/", user_detail, name="user-detail"),
-    path("api/search-user/", search_user, name="search_user"),
+    path("user/<int:pk>/", user_detail, name="user-detail"),
+    path("search-user/", search_user, name="search_user"),
 
     # ======================
     # FRIEND REQUESTS
     # ======================
-    path("api/friend-request/", send_friend_request, name="send_friend_request"),
-    path("api/friend-request/<int:request_id>/accept/", accept_friend_request, name="accept_friend_request"),
-    path("api/friend-request/<int:request_id>/reject/", reject_friend_request, name="reject_friend_request"),
-    path("api/friend-request/<int:request_id>/cancel/", cancel_friend_request, name="cancel_friend_request"),
-    path("api/friend/<int:request_id>/unfriend/", unfriend, name="unfriend"),
-    path("api/friend-requests/", get_friend_requests, name="get_friend_requests"),
+    path("friend-request/", send_friend_request, name="send_friend_request"),
+    path("friend-request/<int:request_id>/accept/", accept_friend_request, name="accept_friend_request"),
+    path("friend-request/<int:request_id>/reject/", reject_friend_request, name="reject_friend_request"),
+    path("friend-request/<int:request_id>/cancel/", cancel_friend_request, name="cancel_friend_request"),
+    path("friend/<int:request_id>/unfriend/", unfriend, name="unfriend"),
+    path("friend-requests/", get_friend_requests, name="get_friend_requests"),
 
     # ======================
     # FRIEND LIST
     # ======================
-    path("api/home-friends/", home_friends, name="home_friends"),
+    path("home-friends/", home_friends, name="home_friends"),
 
     # ======================
     # CHAT
     # ======================
-    path("api/messages/<int:user_id>/", get_messages, name="get_messages"),
-    path("api/send-message/", send_message, name="send_message"),
+    path("messages/<int:user_id>/", get_messages, name="get_messages"),
+    path("send-message/", send_message, name="send_message"),
 ]

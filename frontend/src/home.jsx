@@ -87,7 +87,9 @@ const ChatList = () => {
                   <div className="dropdown-item" onClick={() => navigate("/profile")}>
                     👤 Profile
                   </div>
-                  <div className="dropdown-item">📇 Contact</div>
+                  <div className="dropdown-item" onClick={() => navigate("/support")}>
+                    📇 Contact
+                  </div>
                   <div className="dropdown-item" onClick={handleLogout}>
                     🚪 Logout
                   </div>

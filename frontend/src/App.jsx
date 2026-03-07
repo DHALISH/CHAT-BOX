@@ -7,6 +7,7 @@ import SearchPage from "./searchPage.jsx";
 import NotificationPage from "./notificationpage.jsx";
 import ChatPage from "./chatpage.jsx";
 import ProfilePage from "./profilepage.jsx";
+import Support from "./support.jsx";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/chat/:id" element={<ChatPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/support" element={<Support />} />
 
       </Routes>
     </BrowserRouter>
