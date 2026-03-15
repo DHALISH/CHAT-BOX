@@ -1,0 +1,274 @@
+/* ========================= */
+/* RESET */
+/* ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ========================= */
+/* BACKGROUND */
+/* ========================= */
+body {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+/* ========================= */
+/* MAIN CONTAINER */
+/* ========================= */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 420px;
+  margin: 0 auto;
+  backdrop-filter: blur(20px);
+  background: rgba(15, 23, 42, 0.9);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  color: white;
+  position: relative;
+}
+
+/* ========================= */
+/* HEADER */
+/* ========================= */
+.chat-header {
+  padding: 20px 16px;
+  backdrop-filter: blur(20px);
+  background: rgba(30, 41, 59, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chat-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ========================= */
+/* HEADER ICONS */
+/* ========================= */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+/* Notification Icon */
+.notification-icon {
+  position: relative;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.notification-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 50px;
+  font-weight: bold;
+}
+
+/* Options Button */
+.options-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: 0.2s ease;
+}
+
+.options-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown */
+.options-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 170px;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+  z-index: 100;
+}
+
+.dropdown-item {
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================= */
+/* SEARCH BAR */
+/* ========================= */
+.chat-search {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 15px;
+  border-radius: 30px;
+  transition: 0.2s ease;
+}
+
+.chat-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+}
+
+.chat-search input::placeholder {
+  color: #94a3b8;
+}
+
+/* ========================= */
+/* CHAT BODY */
+/* ========================= */
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 10px;
+}
+
+/* Chat Card */
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  margin: 6px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.chat-item:hover {
+  background: rgba(37, 211, 102, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Avatar */
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25d366, #16a34a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 14px;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  position: relative;
+}
+
+/* Remove online indicator */
+.avatar::after {
+  content: none;
+}
+
+/* Unseen message badge inside avatar */
+.chat-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 50px;
+  font-weight: bold;
+}
+
+/* Chat Info */
+.chat-info h4 {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.chat-info p {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+/* Empty State */
+.no-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+/* Floating Action Button */
+.chat-fab {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #25d366, #16a34a);
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
+  transition: 0.3s ease;
+}
+
+.chat-fab:hover {
+  transform: scale(1.1);
+}

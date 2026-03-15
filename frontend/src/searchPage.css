@@ -1,0 +1,189 @@
+/* Page Background */
+.search-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Card */
+.search-card {
+  width: 100%;
+  max-width: 480px;
+  background: #111827;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.search-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.search-header h2 {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Home Button inside card */
+.home-btn-inside {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #1f2937;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: white;
+  transition: 0.3s;
+}
+
+.home-btn-inside:hover {
+  background: #22c55e;
+  transform: scale(1.1);
+}
+
+/* Search Input */
+.search-box {
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: #1f2937;
+  color: #ffffff;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.search-box input:focus {
+  background: #374151;
+  box-shadow: 0 0 0 2px #22c55e;
+}
+
+/* Loading & Error */
+.loading {
+  text-align: center;
+  color: #22c55e;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  text-align: center;
+  color: #ef4444;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Results */
+.search-results {
+  margin-top: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* User Item */
+.user-item {
+  background: #1f2937;
+  border-radius: 15px;
+  padding: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.user-item:hover {
+  background: #2d3748;
+}
+
+/* Left Section */
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar */
+.avatar {
+  width: 42px;
+  height: 42px;
+  background: #22c55e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+/* User Info */
+.user-info h4 {
+  margin: 0;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Buttons */
+.friend-btn {
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: 0.3s;
+  background: #22c55e;
+  color: white;
+}
+
+.friend-btn:hover {
+  background: #16a34a;
+}
+
+.disabled-btn {
+  background: #374151;
+  cursor: not-allowed;
+}
+
+/* No Result */
+.no-result {
+  text-align: center;
+  font-size: 14px;
+  color: #9ca3af;
+  margin-top: 10px;
+}
+
+/* Scrollbar */
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 10px;
+}
