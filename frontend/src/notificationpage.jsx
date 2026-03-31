@@ -5,6 +5,7 @@ import "./NotificationPage.css";
 function NotificationPage() {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
+  const [showMenu, setShowMenu] = useState(false);
   const token = localStorage.getItem("access");
   const ws = useRef(null);
 
@@ -12,13 +13,20 @@ function NotificationPage() {
     fetchNotifications();
     connectWebSocket();
 
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".options-wrapper")) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
     return () => {
       if (ws.current) ws.current.close();
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [token]);
 
   const fetchNotifications = () => {
-    // Mark notifications as seen when page opens
     fetch("http://127.0.0.1:8000/friend-requests/mark-seen/", {
       method: "POST",
       headers: {
@@ -27,7 +35,6 @@ function NotificationPage() {
       },
     }).catch((err) => console.log(err));
 
-    // Fetch notifications
     fetch("http://127.0.0.1:8000/friend-requests/", {
       method: "GET",
       headers: {
@@ -62,23 +69,8 @@ function NotificationPage() {
 
   const connectWebSocket = () => {
     ws.current = new WebSocket(`ws://127.0.0.1:8000/ws/notifications/?token=${token}`);
-    ws.current.onopen = () => {
-      console.log("WebSocket connected to notifications");
-    };
-    ws.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "friend_request" || data.type === "friend_request_accepted" || data.type === "friend_request_rejected" || data.type === "friend_request_canceled") {
-        // Refresh notifications when friend request status changes
-        fetchNotifications();
-      }
-    };
-    ws.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-    ws.current.onclose = () => {
-      console.log("WebSocket closed, reconnecting...");
-      setTimeout(connectWebSocket, 1000);
-    };
+    ws.current.onmessage = () => fetchNotifications();
+    ws.current.onclose = () => setTimeout(connectWebSocket, 1000);
   };
 
   const acceptRequest = (id) => {
@@ -99,80 +91,112 @@ function NotificationPage() {
     });
   };
 
-  const cancelRequest = (id) => {
-    fetch(`http://127.0.0.1:8000/friend-request/${id}/cancel/`, {
-      method: "DELETE",
-      headers: { Authorization: `Token ${token}` },
-    }).then(() => {
-      setNotifications(notifications.filter((n) => n.id !== id));
-    });
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
-    <div className="notification-container">
-      <div className="notification-card">
-        {/* Header */}
-        <header className="notification-header">
-          <h1 className="notification-title">Notifications</h1>
-        </header>
+    <div className="chat-container">
+      {/* HEADER */}
+      <header className="chat-header">
+        <div className="header-left">
+          <button className="back-button" onClick={() => navigate("/home")}>
+            ←
+          </button>
+          <h1 className="chat-title">Notifications</h1>
+        </div>
 
-        {/* Navigation Bar */}
-        <nav className="notification-nav">
-          <button onClick={() => navigate("/home")}>🏠 Home</button>
-          <button onClick={() => navigate("/profile")}>👤 Profile</button>
-          <button onClick={() => navigate("/chat")}>💬 Chats</button>
-        </nav>
+        <div className="options-wrapper">
+          <button
+            className="options-btn"
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            ⋮
+          </button>
 
-        {/* Notifications */}
-        {notifications.length === 0 ? (
-          <p className="empty">No notifications</p>
-        ) : (
-          notifications.map((n) => (
-            <div key={n.id} className="request-item">
-              <div className="text">
-                {n.type === "received" ? (
-                  <span>
-                    <b>{n.username}</b> sent you a friend request
-                  </span>
-                ) : (
-                  <span>
-                    You sent a friend request to <b>{n.username}</b>
-                  </span>
-                )}
+          {showMenu && (
+            <div className="dropdown-menu">
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/home")}
+              >
+                🏠 Home
               </div>
 
-              <div className="actions">
+              <div
+                className="dropdown-item"
+                onClick={() => navigate("/profile")}
+              >
+                👤 Profile
+              </div>
+
+              <div className="dropdown-item" onClick={handleLogout}>
+                🚪 Logout
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* NOTIFICATIONS */}
+      <div className="chat-body">
+        {notifications.length === 0 ? (
+          <div className="empty-state">
+            <p>No notifications</p>
+          </div>
+        ) : (
+          notifications.map((n) => (
+            <div key={n.id} className="notification-item">
+              <div className="notification-avatar">
+                {n.username.charAt(0).toUpperCase()}
+              </div>
+
+              <div className="notification-content">
+                <div className="notification-text">
+                  {n.type === "received" ? (
+                    <span>
+                      <b>{n.username}</b> sent you a friend request
+                    </span>
+                  ) : (
+                    <span>
+                      You sent a friend request to <b>{n.username}</b>
+                    </span>
+                  )}
+                </div>
+                <div className="notification-time">
+                  {new Date(n.created_at).toLocaleString()}
+                </div>
+              </div>
+
+              <div className="notification-actions">
                 {n.type === "received" ? (
                   <>
                     <button
-                      className="accept"
+                      className="accept-btn"
                       onClick={() => acceptRequest(n.id)}
                     >
                       Accept
                     </button>
                     <button
-                      className="reject"
+                      className="reject-btn"
                       onClick={() => rejectRequest(n.id)}
                     >
                       Reject
                     </button>
                   </>
                 ) : (
-                  <>
-                    <span className="pending">Pending</span>
-                    <button
-                      className="cancel"
-                      onClick={() => cancelRequest(n.id)}
-                    >
-                      Cancel
-                    </button>
-                  </>
+                  <div className="pending-badge">Pending</div>
                 )}
               </div>
             </div>
           ))
         )}
       </div>
+
+      <button className="chat-fab" onClick={() => navigate("/search")}>
+        +
+      </button>
     </div>
   );
 }
